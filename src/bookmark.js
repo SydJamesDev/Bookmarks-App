@@ -13,8 +13,6 @@ $.fn.extend({
   }
 });
 
-//Templates
-
 const generateItemElement = function (item) {
   if(!item.checked){
     return `
@@ -32,6 +30,51 @@ const generateItemElement = function (item) {
     <input type="button" value="delete" class='js-item-delete'>
     <div class ='linebreak'></div>
   </li><br>`;
+  }
+};
+
+const handleNewItemSubmit = function () {
+  $('.container').on('submit','#js-bookmarks-form',(function (event) {
+    event.preventDefault();
+    const newItem ={
+      title:$('#bookmark-title').val(),
+      url:$('#website-url').val(),
+      rating:$('input[type=\'radio\'][name=\'rating\']:checked').val(),
+      desc:$('[name="description"]').val(),
+      checked:false  };  
+    api.createItem(newItem)
+    
+      .then(res =>{
+        if(res.ok){
+          return res.json();
+        }
+        throw new Error(res.statusText);
+      })
+      .then((myItem)=> {
+        store.toggleStoreAdding();
+        store.addItem(myItem);
+        render();
+      })
+      .catch((error) => {
+        store.setError(error.message);
+        render();
+      });
+  }));
+};
+
+const generateError = function (message) {
+  return `
+          <button id="cancel-error">X</button>
+          <p>${message}</p>
+      `;
+};
+  
+const renderError = function () {
+  if (store.error) {
+    const el = generateError(store.error);
+    $('.error-content').html(el);
+  }else{
+    $('.error-content').empty();
   }
 };
 
@@ -80,53 +123,6 @@ const addBookmarkPage = function(){
        <input type="submit" value="Submit">
   </form>`;
   $('.container').html(`${addPage}`);
-};
-//End Templates
-
-//App Functions
-const handleNewItemSubmit = function () {
-  $('.container').on('submit','#js-bookmarks-form',(function (event) {
-    event.preventDefault();
-    const newItem ={
-      title:$('#bookmark-title').val(),
-      url:$('#website-url').val(),
-      rating:$('input[type=\'radio\'][name=\'rating\']:checked').val(),
-      desc:$('[name="description"]').val(),
-      checked:false  };  
-    api.createItem(newItem)
-    
-      .then(res =>{
-        if(res.ok){
-          return res.json();
-        }
-        throw new Error(res.statusText);
-      })
-      .then((myItem)=> {
-        store.toggleStoreAdding();
-        store.addItem(myItem);
-        render();
-      })
-      .catch((error) => {
-        store.setError(error.message);
-        render();
-      });
-  }));
-};
-
-const generateError = function (message) {
-  return `
-          <button id="cancel-error">X</button>
-          <p>${message}</p>
-      `;
-};
-  
-const renderError = function () {
-  if (store.error) {
-    const el = generateError(store.error);
-    $('.error-content').html(el);
-  }else{
-    $('.error-content').empty();
-  }
 };
 
 const handleAddBookmark = function (){
@@ -190,14 +186,21 @@ const handleErrorButton = function (){
   });
 };
 
+const bindEventListener = function (){
+  handleErrorButton();
+  handlefilterButton();
+  handleClickBookmark();
+  handleDeleteBookmark();
+  handleAddBookmark();
+  handleCancelButton();
+  handleNewItemSubmit();
+};
+
 const generateBookmarkString = function (bookmarks) {
   const items = bookmarks.map((item) => generateItemElement(item));
   return items.join('');
 };
 
-//End App Functions
-
-//Render page
 const render = function () {
   if(store.adding){
     addBookmarkPage();
@@ -216,17 +219,6 @@ const render = function () {
   }
 };
 
-const bindEventListener = function (){
-  handleErrorButton();
-  handlefilterButton();
-  handleClickBookmark();
-  handleDeleteBookmark();
-  handleAddBookmark();
-  handleCancelButton();
-  handleNewItemSubmit();
-};
-
-//Export
 export default {
   render,
   bindEventListener
