@@ -19,7 +19,7 @@ const generateItemElement = function (item) {
       <div class ='linebreak'></div>
     </li>`;
   }else{
-    return ` <li tabindex="-1" class="js-item-element" data-item-id="${item.id}">
+    return ` <li class="js-item-element" data-item-id="${item.id}">
     ${item.title} ${item.rating}★
     <br>
     <a href="${item.url}">${item.title}</a>
