@@ -1,3 +1,4 @@
+//Github pages doesn't like me
 const bookmarks = [];
 let error = null;
 let adding = false;
