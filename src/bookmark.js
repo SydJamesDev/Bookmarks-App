@@ -25,7 +25,7 @@ const generateItemElement = function (item) {
     <a href="${item.url}">${item.title}</a>
     <br>
     ${item.desc}
-    <input tabindex="0" type="button" value="delete" class='js-item-delete'>
+    <input tabindex="0" type="button" value="Delete" class='js-item-delete'>
     <div class ='linebreak'></div>
   </li><br>`;
   }
