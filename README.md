@@ -1,7 +1,5 @@
 # Syd-Barrett-Bookmarks-App
 
-https://thinkful-ei-tiger.github.io/Syd-Barrett-Bookmarks-App/
-
 This application will allow a user to save links to other sites, add a description, and rate the links they've saved.
 
 I can add bookmarks to my bookmark list. Bookmarks contain:
